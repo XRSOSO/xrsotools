@@ -1,0 +1,57 @@
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: xrtools-app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: xrtools_user
+      DB_PASSWORD: xrtools_pass
+      DB_NAME: xrtools_db
+    networks:
+      - xrtools-network
+
+  db:
+    image: mysql:5.7
+    container_name: xrtools-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: xrtools_db
+      MYSQL_USER: xrtools_user
+      MYSQL_PASSWORD: xrtools_pass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - xrtools-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: xrtools-pma
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+    networks:
+      - xrtools-network
+
+networks:
+  xrtools-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

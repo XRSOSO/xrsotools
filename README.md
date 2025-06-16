@@ -1,2 +1,3 @@
-# xrsotools
-xrsotools
+# 在线工具箱部署指南
+版本: 1.0.0
+打包时间: Tue Jun 17 00:37:28 CST 2025
